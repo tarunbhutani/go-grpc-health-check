@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  health-check-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.server
+    ports:
+      - "50051:50051"
+    container_name: health-check-deamon
+
+  health-check-client:
+    build:
+      context: .
+      dockerfile: Dockerfile.client
+    environment:
+      - GRPC_ADDR=health-check-server:50051
+    ports:
+      - "8443:8443"
+    container_name: health-check-client
+    depends_on:
+      - health-check-server
